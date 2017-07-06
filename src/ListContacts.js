@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import escapeRegExp from 'escape-string-regexp'
+import sortBy from 'sort-by'
 
 // a component that only has a render method can be simplified into this "stateless" component, in which case we use props alone and don't have to worry about context
 // function ListContacts(props) {
@@ -39,11 +41,18 @@ class ListContacts extends Component {
   }
 
   updateQuery = (query) => {
-
     this.setState({ query: query.trim() })
   }
 
   render() {
+    let showingContacts
+    if (this.state.query) {
+      const match = new RegExp(escapeRegExp(this.state.query), 'i')
+      showingContacts = this.props.contacts.filter((contact) => match.test(contact.name))
+    } else {
+      showingContacts = this.props.contacts
+    }
+
     return(
       // return an ordered list
       // maps over each contact and display a contact to the view
@@ -59,7 +68,7 @@ class ListContacts extends Component {
           />
         </div>
         <ol className='contact-list'>
-          {this.props.contacts.map((contact) => (
+          {showingContacts.map((contact) => (
             // why do we need a key here?  Because when we do a map, if we don't have a unique identifier for every key, React runs the risk of updating the entire list upon a state change
             <li key={contact.id} className='contact-list-item'>
               <div className='contact-avatar' style={{
