@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom'
 import ListContacts from './ListContacts'
-import CreateContacts from './CreateContacts'
+import CreateContact from './CreateContact'
 import * as ContactsAPI from './utils/ContactsAPI'
 
 
@@ -42,7 +42,7 @@ class App extends Component {
             contacts={this.state.contacts}
           />
         )}/>
-        <Route path="/create" component={CreateContacts}/>
+        <Route path="/create" component={CreateContact}/>
       </div>
     );
   }
