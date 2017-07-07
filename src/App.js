@@ -1,32 +1,19 @@
 import React, { Component } from 'react';
 import ListContacts from './ListContacts'
-
+import * as ContactsAPI from './utils/ContactsAPI'
 
 class App extends Component {
 
   state = {
-    contacts: [
-      {
-        "id": "ryan",
-        "name": "Ryan Florence",
-        "email": "ryan@reacttraining.com",
-        "avatarURL": "http://localhost:5001/ryan.jpg"
-      },
-      {
-        "id": "michael",
-        "name": "Michael Jackson",
-        "email": "michael@reacttraining.com",
-        "avatarURL": "http://localhost:5001/michael.jpg"
-      },
-      {
-        "id": "tyler",
-        "name": "Tyler McGinnis",
-        "email": "tyler@reacttraining.com",
-        "avatarURL": "http://localhost:5001/tyler.jpg"
-      }
-    ]
+    contacts: []
   }
 
+  // when the component mounts, it grabs data from the API and stores it into the contacts array
+  componentDidMount() {
+    ContactsAPI.getAll().then((contacts) => {
+      this.setState({ contacts })
+    })
+  }
   // here we created a function that will remove a contact
   // we pass in the current state to setState, and we filter based on what the current contact.id is
   // basically, we filter the array to include all elements of the state that does not equal the contact that we just clicked.  Pretty cool, right?
@@ -38,6 +25,9 @@ class App extends Component {
     this.setState((state) => ({
       contacts: state.contacts.filter((c) => c.id !== contact.id)
     }))
+
+    // also removes from our database
+    ContactsAPI.remove(contact)
   }
 
   render() {

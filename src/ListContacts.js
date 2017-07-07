@@ -44,29 +44,48 @@ class ListContacts extends Component {
     this.setState({ query: query.trim() })
   }
 
+  clearQuery = () => {
+    this.setState({ query: '' })
+  }
+
   render() {
+
+    // object destructuring, to help clean up code
+    const { contacts, onDeleteContact } = this.props;
+    const { query } = this.state;
+
     let showingContacts
-    if (this.state.query) {
+    if (query) {
       const match = new RegExp(escapeRegExp(this.state.query), 'i')
-      showingContacts = this.props.contacts.filter((contact) => match.test(contact.name))
+      showingContacts = contacts.filter((contact) => match.test(contact.name));
     } else {
-      showingContacts = this.props.contacts
+      showingContacts = contacts;
     }
+
+    // sort comes with JavaScript, and sortBy allows us to sort by a particular id
+    showingContacts.sort(sortBy('name'))
 
     return(
       // return an ordered list
       // maps over each contact and display a contact to the view
       <div className='list-contacts'>
-      {JSON.stringify(this.state)}
         <div className='list-contacts-top'>
           <input
             className='search-contacts'
             type='text'
             placeholder='Search contacts'
-            value={this.state.query}
+            value={query}
             onChange={(event) => this.updateQuery(event.target.value)}
           />
         </div>
+
+        {showingContacts.length !== contacts.length && (
+          <div className='showing-contacts'>
+              <span>Now showing {showingContacts.length} of {contacts.length}</span>
+              <button onClick={this.clearQuery}>Show all</button>
+          </div>
+        )}
+
         <ol className='contact-list'>
           {showingContacts.map((contact) => (
             // why do we need a key here?  Because when we do a map, if we don't have a unique identifier for every key, React runs the risk of updating the entire list upon a state change
