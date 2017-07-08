@@ -1,6 +1,6 @@
 # Contact Project
 
-This project was built with the help the folks at React Training.
+This project was built with help from the folks at React Training.
 
 ## Getting set up
 
